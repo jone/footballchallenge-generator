@@ -34,6 +34,7 @@ def fetch_teams():
             team = row.dict()
             team['Link'] = link
             team['ID'] = team_id
+            team['FIFA Rang'] = int(team['FIFA Rang'])
             team['players'] = list(fetch_players(team))
             teams[team_id] = team
 
@@ -53,6 +54,7 @@ def fetch_players(team):
         player_id = int(link.split('/')[-1])
 
         player = row.dict()
+        player['Marktwert'] = int(player['Marktwert'].replace("'", ""))
         player['ID'] = player_id
         player['Link'] = link
         yield player
