@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+if [[ ! -a ./bin/pip ]]; then
+    virtualenv-2.7 .
+fi
+
+./bin/python setup.py develop

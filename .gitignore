@@ -1,4 +1,8 @@
 .Python
-bin/
-include/
-lib/
+bin/*
+build/*
+include/*
+lib/*
+wm2012.egg-info/*
+
+!bin/bootstrap
