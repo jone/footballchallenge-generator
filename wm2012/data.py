@@ -10,7 +10,11 @@ def load(path):
         return recursive_encode(json.load(file_))
 
 def teams():
-    return load(TEAMS_PATH)
+    teams = load(TEAMS_PATH)
+    for team_id, team in teams.items():
+        for player in team['players']:
+            player['team_id'] = team_id
+    return teams
 
 TEAMS = teams()
 TEAMS_BY_NATION = dict(map(lambda team: (team['Nation'], team), TEAMS.values()))
