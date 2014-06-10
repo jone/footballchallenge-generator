@@ -30,13 +30,13 @@ def validate_first_team_has_enough_nations(first_team):
     amount_of_players = len(first_team)
     amount_of_possible_future_nations = 11 - amount_of_players
 
-    return amount_of_nations + amount_of_possible_future_nations
+    return amount_of_nations + amount_of_possible_future_nations >= 6
 
 def validate_all_teams_have_enough_nations(first_team, second_team):
     nations = set(map(itemgetter('team_id'), first_team + second_team))
 
     amount_of_nations = len(nations)
-    amount_of_players = len(first_team)
+    amount_of_players = len(first_team + second_team)
     amount_of_possible_future_nations = 22 - amount_of_players
 
-    return amount_of_nations + amount_of_possible_future_nations
+    return amount_of_nations + amount_of_possible_future_nations >= 12

@@ -1,15 +1,80 @@
 from collections import defaultdict
 from operator import itemgetter
+from wm2012.stats import humanize
 import itertools
 
 
+# SCORE_MULTIPLIER = {
+#     'group_loosers': 1.0,
+#     'eight_loosers': 1.001,
+#     'quarter_loosers': 1.002,
+#     'semi_loosers': 1.1,
+#     'final_looser': 1.2,
+#     'winner': 1.3}
+
+# Total Teams: 12
+# Player score sum: 2219800000.0 (2.1G)
+# Player market value: 1673000000 (1.6G)
+# Total match score: 137
 SCORE_MULTIPLIER = {
     'group_loosers': 1.0,
     'eight_loosers': 1.1,
-    'quarter_loosers': 1.4,
-    'semi_loosers': 1.8,
-    'final_looser': 2.0,
-    'winner': 3.0}
+    'quarter_loosers': 1.2,
+    'semi_loosers': 1.3,
+    'final_looser': 1.4,
+    'winner': 1.5}
+
+
+# # Total Teams: 12
+# # Player score sum: 3106600000.0 (2.9G)
+# # Player market value: 1630000000 (1.5G)
+# # Total match score: 134
+# SCORE_MULTIPLIER = {
+#     'group_loosers': 1.0,
+#     'eight_loosers': 1.2,
+#     'quarter_loosers': 1.4,
+#     'semi_loosers': 1.7,
+#     'final_looser': 2.1,
+#     'winner': 2.5}
+
+
+# # Total Teams: 12
+# # Player score sum: 3391300000.0 (3.2G)
+# # Player market value: 1592000000 (1.5G)
+# # Total match score: 139
+# SCORE_MULTIPLIER = {
+#     'group_loosers': 1.0,
+#     'eight_loosers': 1.1,
+#     'quarter_loosers': 1.4,
+#     'semi_loosers': 1.8,
+#     'final_looser': 2.0,
+#     'winner': 3.0}
+
+
+# # Total Teams: 12
+# # Player score sum: 5604500000.0 (5.2G)
+# # Player market value: 1630000000 (1.5G)
+# # Total match score: 134
+# SCORE_MULTIPLIER = {
+#     'group_loosers': 1.0,
+#     'eight_loosers': 1.5,
+#     'quarter_loosers': 2.0,
+#     'semi_loosers': 3.0,
+#     'final_looser': 4.0,
+#     'winner': 5.0}
+
+
+# # Total Teams: 12
+# # Player score sum: 1271250000000 (1.2T)
+# # Player market value: 1306000000 (1.2G)
+# # Total match score: 137
+# SCORE_MULTIPLIER = {
+#     'group_loosers': 100,
+#     'eight_loosers': 150,
+#     'quarter_loosers': 200,
+#     'semi_loosers': 400,
+#     'final_looser': 800,
+#     'winner': 1600}
 
 REVERSE_SCORE_MULTIPLIER = dict(zip(*reversed(zip(*SCORE_MULTIPLIER.items()))))
 
@@ -28,10 +93,20 @@ def calculate_score_multiplier(groups):
 def apply_score_multiplier(teams):
     print 'Ranking: Applying score multiplier to players.'
 
-    for team in sorted(teams, key=itemgetter('score_multiplier'), reverse=True):
-        print '-', team['Nation'], '({}, -> {})'.format(
-            team['score_multiplier'],
-            REVERSE_SCORE_MULTIPLIER[team['score_multiplier']])
+    for pos, team in enumerate(sorted(teams,
+                                      key=itemgetter('score_multiplier'),
+                                      reverse=True)):
+        team_market_value = sum(map(itemgetter('Marktwert'), team['players']))
+        print '#{}'.format(pos+1).rjust(3), \
+            team['Nation'].decode('utf-8').rjust(20, '.'), \
+            '#{}'.format(str(team['FIFA Rang'])).ljust(3), \
+            '..', \
+            '{}$ ({}$)'.format(team_market_value,
+                               humanize(team_market_value)).rjust(20, '.'), \
+            ' -> ', \
+            team['score_multiplier'], \
+            REVERSE_SCORE_MULTIPLIER[team['score_multiplier']]
+
         for player in team['players']:
             _calculate_player_score(player, team)
 
@@ -55,23 +130,17 @@ def _calculate_group_results(groups):
     results = {}
 
     for group_name, teams in groups.items():
+        assert len(teams) == 4
         # print 'Group', group_name
         group_results = dict(zip(map(itemgetter('ID'), teams), [0] * len(teams)))
 
         for team_a, team_b in itertools.combinations(teams, 2):
-            winner = sorted((team_a, team_b), _compare_winner_teams)[0]
+            winner = _winner_of(team_a, team_b, SCORE_MULTIPLIER['group_loosers'])
             group_results[winner['ID']] += 1
 
-        group_ranks = sorted(teams,
-                             key=lambda team: group_results[team['ID']],
-                             reverse=True)
-        for rank, team in enumerate(group_ranks):
-            # print '  #{0}: {1} ({2} wins)'.format(rank + 1,
-            #                                       team['Nation'],
-            #                                       group_results[team['ID']])
-            team['score_multiplier'] = SCORE_MULTIPLIER['group_loosers']
-
-        results[group_name] = group_ranks
+        results[group_name] = sorted(teams,
+                                     key=lambda team: group_results[team['ID']],
+                                     reverse=True)
 
     return results
 
@@ -150,14 +219,31 @@ def _calculate_final_results(semi_final_results):
     return winner
 
 
+
+def _match(team_a, team_b, looser_score_multiplier):
+    winner, looser = sorted((team_a, team_b), _compare_winner_teams)
+    winner['stats']['wins'] += 1
+    looser['stats']['losses'] += 1
+    looser['score_multiplier'] = looser_score_multiplier
+    return winner, looser
+
+
 def _compare_winner_teams(*teams):
+    for team in teams:
+        if 'stats' not in team:
+            team['stats'] = {'wins': 0,
+                             'losses': 0}
+
+    # Marktwert
+    # return cmp(*tuple(sum(map(itemgetter('Marktwert'), team['players']))
+    #                   for team in reversed(teams)))
+
+    # FIFA Rang
     return cmp(*map(itemgetter('FIFA Rang'), teams))
 
 
 def _winner_of(team_a, team_b, looser_score_multiplier):
-    winner, looser = sorted((team_a, team_b), _compare_winner_teams)
-    looser['score_multiplier'] = looser_score_multiplier
-    return winner
+    return _match(team_a, team_b, looser_score_multiplier)[0]
 
 
 def _calculate_player_score(player, team):
