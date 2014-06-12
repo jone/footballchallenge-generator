@@ -18,7 +18,7 @@ def player_score_sum(first_team, second_team):
 
 
 def player_market_values(first_team, second_team):
-    first = sum(map(itemgetter('Marktwert'), first_team)) * 2
+    first = sum(map(itemgetter('Marktwert'), first_team))
     second = sum(map(itemgetter('Marktwert'), second_team))
     total = sum((first, second))
     return '{} ({})'.format(total, humanize(total))
