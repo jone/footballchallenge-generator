@@ -5,31 +5,14 @@ from wm2012.stats import humanize
 import itertools
 
 
-# SCORE_MULTIPLIER = {
-#     'group_loosers': 1.0,
-#     'eight_loosers': 1.001,
-#     'quarter_loosers': 1.002,
-#     'semi_loosers': 1.1,
-#     'final_looser': 1.2,
-#     'winner': 1.3}
-
-# Total Teams: 12
-# Player score sum: 2219800000.0 (2.1G)
-# Player market value: 1673000000 (1.6G)
-# Total match score: 137
 SCORE_MULTIPLIER = {
-    'group_loosers': 1.0,
-    'eight_loosers': 1.1,
-    'quarter_loosers': 1.2,
-    'semi_loosers': 1.3,
-    'final_looser': 1.4,
-    'winner': 1.5}
+    'group_loosers': 0.1,
+    'eight_loosers': 0.1,
+    'quarter_loosers': 0.1,
+    'semi_loosers': 0.1,
+    'final_looser': 0.1,
+    'winner': 0.1}
 
-
-# # Total Teams: 12
-# # Player score sum: 3106600000.0 (2.9G)
-# # Player market value: 1630000000 (1.5G)
-# # Total match score: 134
 # SCORE_MULTIPLIER = {
 #     'group_loosers': 1.0,
 #     'eight_loosers': 1.2,
@@ -39,10 +22,6 @@ SCORE_MULTIPLIER = {
 #     'winner': 2.5}
 
 
-# # Total Teams: 12
-# # Player score sum: 3391300000.0 (3.2G)
-# # Player market value: 1592000000 (1.5G)
-# # Total match score: 139
 # SCORE_MULTIPLIER = {
 #     'group_loosers': 1.0,
 #     'eight_loosers': 1.1,
@@ -52,10 +31,6 @@ SCORE_MULTIPLIER = {
 #     'winner': 3.0}
 
 
-# # Total Teams: 12
-# # Player score sum: 5604500000.0 (5.2G)
-# # Player market value: 1630000000 (1.5G)
-# # Total match score: 134
 # SCORE_MULTIPLIER = {
 #     'group_loosers': 1.0,
 #     'eight_loosers': 1.5,
@@ -64,18 +39,6 @@ SCORE_MULTIPLIER = {
 #     'final_looser': 4.0,
 #     'winner': 5.0}
 
-
-# # Total Teams: 12
-# # Player score sum: 1271250000000 (1.2T)
-# # Player market value: 1306000000 (1.2G)
-# # Total match score: 137
-# SCORE_MULTIPLIER = {
-#     'group_loosers': 100,
-#     'eight_loosers': 150,
-#     'quarter_loosers': 200,
-#     'semi_loosers': 400,
-#     'final_looser': 800,
-#     'winner': 1600}
 
 REVERSE_SCORE_MULTIPLIER = dict(zip(*reversed(zip(*SCORE_MULTIPLIER.items()))))
 

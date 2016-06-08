@@ -19,3 +19,5 @@ $ bin/bootstrap
 $ bin/fetch
 $ bin/generate
 ```
+
+Play with score multipliers in ``ranking.py``.
