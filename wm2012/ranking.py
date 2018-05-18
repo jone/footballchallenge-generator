@@ -1,6 +1,5 @@
 from collections import defaultdict
 from operator import itemgetter
-from pprint import pprint
 from wm2012.stats import humanize
 import itertools
 
@@ -112,45 +111,38 @@ def _calculate_group_results(groups):
 def _calculate_eight_final_results(group_results):
     print '.. calculating eight final results'
 
-    def play(team1, team2):
-        return _winner_of(
-            team1, team2,
+    games = {
+        '1A': '2B',
+        '1B': '2A',
+        '1C': '2D',
+        '1D': '2C',
+        '1E': '2F',
+        '1F': '2E',
+        '1G': '2H',
+        '1H': '2G'}
+    results = {}
+
+    for team_a_name, team_b_name in games.items():
+        team_a_rank, team_a_group = team_a_name
+        team_a = group_results[team_a_group][int(team_a_rank) - 1]
+
+        team_b_rank, team_b_group = team_b_name
+        team_b = group_results[team_b_group][int(team_b_rank) - 1]
+
+        winner = _winner_of(
+            team_a, team_b,
             looser_score_multiplier=SCORE_MULTIPLIER['eight_loosers'])
+        results['-'.join((team_a_name, team_b_name))] = winner
 
-    A = group_results['A']
-    B = group_results['B']
-    C = group_results['C']
-    D = group_results['D']
-    E = group_results['E']
-    F = group_results['F']
-
-    thirds = [group[2] for group in group_results.values()]
-    best_thirds = sorted(thirds, cmp=_compare_winner_teams)[:4]
-
-    for one, two, three, four in itertools.combinations(best_thirds, 4):
-        if (one in B or
-            two in D or
-            three in A or
-            four in C):
-            continue
-
-        return {'e1': play(A[1], C[2]),
-                'e2': play(B[0], one),
-                'e3': play(D[0], two),
-                'e4': play(A[0], three),
-                'e5': play(C[0], four),
-                'e6': play(F[0], E[1]),
-                'e7': play(E[0], D[1]),
-                'e8': play(B[1], F[1])}
+    return results
 
 
 def _calculate_quarter_final_results(eight_final_results):
     print '.. calculating quarter final results'
-
-    games = (('e1', 'e2'),
-             ('e3', 'e4'),
-             ('e5', 'e6'),
-             ('e7', 'e8'))
+    games = (('1E-2F', '1G-2H'),
+             ('1A-2B', '1C-2D'),
+             ('1F-2E', '1H-2G'),
+             ('1B-2A', '1D-2C'))
 
     results = []
 

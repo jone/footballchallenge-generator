@@ -25,7 +25,7 @@ def fetch_teams():
     teams = {}
 
     with browser:
-        browser.open('https://emgame2016.4teamwork.ch/nationen-spieler')
+        browser.open('https://wmgame2018.4teamwork.ch/nationen-spieler')
         table = browser.css('#content-core table.listing').first
         for row in table.css('tbody tr'):
             link = row.css('td a').first.attrib.get('href')

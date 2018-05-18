@@ -1,8 +1,10 @@
 {
-  "A": ["Frankreich", "Rumänien", "Albanien", "Schweiz"],
-  "B": ["England", "Russland", "Wales", "Slowakei"],
-  "C": ["Deutschland", "Ukraine", "Polen", "Nordirland"],
-  "D": ["Spanien", "Tschechien", "Türkei", "Kroatien"],
-  "E": ["Belgien", "Italien", "Irland", "Schweden"],
-  "F": ["Portugal", "Island", "Österreich", "Ungarn"]
+  "A": ["Russland", "Saudi-Arabien", "Ägypten", "Uruguay"],
+  "B": ["Portugal", "Spanien", "Marokko", "Iran"],
+  "C": ["Frankreich", "Australien", "Peru", "Dänemark"],
+  "D": ["Argentinien", "Island", "Kroatien", "Nigeria"],
+  "E": ["Brasilien", "Schweiz", "Costa Rica", "Serbien"],
+  "F": ["Deutschland", "Mexiko", "Schweden", "Südkorea"],
+  "G": ["Belgien", "Panama", "Tunesien", "England"],
+  "H": ["Polen", "Senegal", "Kolumbien", "Japan"]
 }
